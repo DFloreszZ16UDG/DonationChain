@@ -99,7 +99,7 @@ python --version
 3. Ejecutar:
 
 ```bash
-python "Act 2.3.py"
+python "DonationChain.py"
 ```
 
 ## Uso
