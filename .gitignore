@@ -9,6 +9,20 @@ __pycache__/
 venv/
 env/
 
+# Dependencias y compilaciones web
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+
+# Hardhat / Solidity
+artifacts/
+cache/
+typechain-types/
+ignition/deployments/
+
 # Configuración de editores
 .vscode/
 .idea/
@@ -24,3 +38,12 @@ Thumbs.db
 # Información privada o local
 .env
 comprobantes/
+backend/storage/
+backend/*.db
+backend/*.sqlite*
+
+# Resultados de pruebas
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/

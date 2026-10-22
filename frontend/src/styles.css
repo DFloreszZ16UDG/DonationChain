@@ -1,0 +1,78 @@
+:root {
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; }
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: .82rem;
+  font-weight: 900;
+  letter-spacing: -.04em;
+  background: linear-gradient(145deg, #0b6b57, #06483b);
+  box-shadow: 0 8px 22px rgba(11, 107, 87, .25);
+}
+
+.hero {
+  padding: 92px 0 112px;
+  color: white;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at 80% 20%, rgba(217, 151, 61, .28), transparent 32%),
+    radial-gradient(circle at 15% 100%, rgba(62, 178, 145, .2), transparent 38%),
+    #073f35;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -210px;
+  bottom: -240px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 50%;
+  box-shadow: 0 0 0 70px rgba(255,255,255,.025), 0 0 0 140px rgba(255,255,255,.018);
+}
+
+.trust-card {
+  padding: 28px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.1);
+  box-shadow: 0 24px 80px rgba(0,0,0,.18);
+  backdrop-filter: blur(18px);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e5ad5d;
+  box-shadow: 0 0 0 5px rgba(229, 173, 93, .14);
+}
+.status-dot.online { background: #64d8b6; box-shadow: 0 0 0 5px rgba(100, 216, 182, .13); }
+
+.login-icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+  color: #0b6b57;
+  border-radius: 17px;
+  background: #d9eee8;
+}
+
+@media (max-width: 600px) {
+  .hero { padding: 66px 0 90px; }
+}

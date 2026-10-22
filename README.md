@@ -1,154 +1,128 @@
-# Plataforma de transparencia de donaciones con Blockchain
+# DonationChain
 
-## Descripción
+Plataforma web para seguir el origen y uso de donaciones. Una persona puede consultar cuánto recibió una campaña, qué gastos fueron aprobados, qué comprobante respalda cada movimiento y si el archivo conserva su huella SHA-256.
 
-Este proyecto es una simulación académica de una plataforma de transparencia y trazabilidad de donaciones mediante una cadena de bloques.
+El proyecto evolucionó desde una simulación de escritorio hacia un piloto con API, base de datos, usuarios, roles, comprobantes reales, auditoría y un Smart Contract preparado para Ethereum Sepolia.
 
-El programa permite registrar una donación, calcular la huella digital de su comprobante, validar los datos de la transacción y almacenarla dentro de una Blockchain simplificada.
-
-No utiliza criptomonedas ni se conecta a una red Blockchain real. Su propósito es demostrar de manera visual conceptos como transacciones, validación, hashes, bloques, encadenamiento e integridad de la información.
-
-## Objetivo
-
-Utilizar los principios de Blockchain para crear un historial verificable de donaciones.
-
-El sistema busca representar cómo una organización podría registrar movimientos importantes y utilizar hashes criptográficos para detectar modificaciones en las transacciones o sus comprobantes.
+![Vista del seguimiento personal de una donación](docs/pilot-preview.png)
 
 ## Funcionalidades
 
-- Registro del nombre del donante.
-- Registro de la campaña beneficiada.
-- Registro del monto de la donación.
-- Selección de un comprobante desde el equipo.
-- Cálculo del hash SHA-256 del comprobante.
-- Creación de un identificador único para cada donación.
-- Generación del hash de la transacción.
-- Validación de los datos antes del registro.
-- Creación de bloques enlazados mediante hashes.
-- Visualización de la Blockchain.
-- Verificación de la integridad de bloques y transacciones.
-- Detección de modificaciones en la información registrada.
+- Organizaciones, usuarios y campañas persistentes.
+- Roles de administrador, organización, donante y auditor.
+- Montos exactos con `Decimal`; nunca se usa `float` para dinero.
+- Registro de donaciones y solicitud de gastos.
+- Aprobación o rechazo independiente de gastos.
+- Asignación automática FIFO que indica qué donaciones financiaron cada gasto.
+- Carga de comprobantes PDF, PNG o JPEG con límite de 10 MB.
+- Verificación posterior del SHA-256 de un comprobante.
+- Historial público por campaña y saldos recaudado, utilizado y disponible.
+- Cadena de auditoría local enlazada mediante hashes.
+- Smart Contract sin criptomoneda para anclar evidencia en Sepolia.
+- Pruebas integrales, análisis estático y auditorías de dependencias.
 
-## Flujo de una transacción
-
-El flujo principal del programa es:
+## Arquitectura
 
 ```text
-Ingresar datos de la donación
-        ↓
-Seleccionar comprobante
-        ↓
-Calcular hash SHA-256 del comprobante
-        ↓
-Crear transacción
-        ↓
-Calcular hash de la transacción
-        ↓
-Validar transacción
-        ↓
-Crear un nuevo bloque
-        ↓
-Enlazar con el bloque anterior
-        ↓
-Calcular hash del bloque
-        ↓
-Agregar bloque a la Blockchain
-        ↓
-Mostrar confirmación
+frontend/   React + TypeScript + Vite + Material UI
+backend/    Python 3.13 + FastAPI + SQLAlchemy + SQLite/PostgreSQL
+contracts/  Solidity + Hardhat 3 + viem
+legacy/     Simulación original en Tkinter
+docs/       Arquitectura, seguridad y despliegue
 ```
 
-## Tipos de hash utilizados
+Los comprobantes y los datos personales no se guardan en Blockchain. El contrato conserva únicamente identificadores y hashes. Consulta [la arquitectura](docs/ARQUITECTURA.md) para ver el flujo completo.
 
-### Hash del comprobante
+## Inicio rápido en Windows
 
-Representa la huella digital del archivo seleccionado. Permite comprobar si el comprobante fue modificado posteriormente.
+Requisitos:
 
-### Hash de la transacción
+- Python 3.13.
+- Node.js 22.13 o posterior.
+- PowerShell.
 
-Protege los datos de la donación, incluyendo el donante, la campaña, el monto, la fecha y el hash del comprobante.
+Instala las dependencias:
 
-### Hash del bloque
-
-Protege el contenido completo del bloque y permite enlazarlo con el siguiente bloque de la cadena.
-
-## Tecnologías utilizadas
-
-- Python 3
-- Tkinter
-- SHA-256
-- JSON
-- UUID
-
-Todas las bibliotecas utilizadas forman parte de la biblioteca estándar de Python, por lo que no es necesario instalar paquetes adicionales.
-
-## Requisitos
-
-- Python 3.8 o posterior.
-- Tkinter disponible en la instalación de Python.
-
-Para comprobar que Python está instalado:
-
-```bash
-python --version
+```powershell
+./setup.ps1
 ```
 
-## Ejecución
+Copia `backend/.env.example` como `backend/.env` y reemplaza, como mínimo:
 
-1. Descargar o clonar este repositorio.
-2. Abrir una terminal dentro de la carpeta del proyecto.
-3. Ejecutar:
-
-```bash
-python "DonationChain.py"
+```env
+JWT_SECRET=una-cadena-aleatoria-larga
+DEMO_PASSWORD=una-contrasena-local-segura
 ```
 
-## Uso
+Inicia la API:
 
-1. Escribir el nombre del donante.
-2. Escribir el nombre de la campaña.
-3. Introducir el monto de la donación.
-4. Seleccionar un archivo como comprobante.
-5. Presionar **Validar y registrar donación**.
-6. Consultar los bloques con **Mostrar Blockchain**.
-7. Comprobar la cadena con **Verificar integridad**.
+```powershell
+./start-backend.ps1
+```
 
-El comprobante puede ser un archivo PDF, una imagen o un documento de texto. El archivo no se almacena dentro de la Blockchain; únicamente se registra su hash SHA-256.
+En otra terminal inicia la página:
 
-## Alcance y limitaciones
+```powershell
+./start-frontend.ps1
+```
 
-Este programa es una simulación local con fines educativos.
+Abre `http://localhost:5173`. La documentación interactiva de la API está en `http://127.0.0.1:8000/docs`.
 
-Actualmente:
+## Cuentas del piloto
 
-- La Blockchain se mantiene únicamente mientras el programa está abierto.
-- La información no se guarda en una base de datos.
-- No existe comunicación entre nodos.
-- No se utiliza un mecanismo de consenso.
-- No se emplean firmas digitales.
-- No se realizan transferencias de criptomonedas.
-- Cada donación se registra en un bloque independiente.
-- No se verifica que una transferencia bancaria haya ocurrido realmente.
+Cuando `ENVIRONMENT=development` y existe `DEMO_PASSWORD`, el sistema crea:
 
-Los hashes permiten detectar modificaciones, pero no demuestran por sí solos que un comprobante sea auténtico.
+| Rol | Correo |
+|---|---|
+| Administrador | `admin@donationchain.example.com` |
+| Organización | `organizacion@donationchain.example.com` |
+| Auditor | `auditor@donationchain.example.com` |
+| Donante | `donante@donationchain.example.com` |
 
-## Posibles mejoras
+Todas usan exclusivamente la contraseña local definida en `DEMO_PASSWORD`. Estas cuentas no deben habilitarse en producción.
 
-- Crear campañas con metas de recaudación.
-- Registrar gastos asociados con cada campaña.
-- Calcular las cantidades recaudadas, utilizadas y disponibles.
-- Incorporar usuarios y roles.
-- Agregar firmas digitales.
-- Guardar la cadena en un archivo o base de datos.
-- Permitir la verificación posterior de comprobantes.
-- Mostrar un historial completo por campaña.
-- Incorporar una red de nodos para simular un sistema distribuido.
+## Smart Contract y Proof of Stake
 
-## Propósito académico
+`contracts/contracts/DonationTraceability.sol` registra:
 
-Proyecto desarrollado para la materia **Cadena de Bloques**, con el objetivo de representar el flujo de creación, validación y registro de una transacción dentro de una Blockchain simplificada.
+- hash del identificador de la evidencia;
+- hash de los datos auditados;
+- tipo de registro;
+- fecha del bloque;
+- dirección autorizada que escribió;
+- URI lógica sin información personal.
 
-## Autores
+Ethereum utiliza Proof of Stake y Sepolia es su red de prueba recomendada para aplicaciones. DonationChain usa ese consenso existente: no implementa una minería ni un “Proof of State” propio.
 
-- Nombres: `Diego Flores Murillo, Diego Alexis Galván Roldán`
-- Carrera: Ingeniería en Informática
-- Materia: Cadena de Bloques
+La API ya puede consultar Sepolia. Para desplegar y habilitar escrituras hacen falta una cartera separada, ETH de prueba y variables privadas. Sigue [la guía del piloto](docs/DESPLIEGUE_PILOTO.md). Nunca subas una clave privada a GitHub.
+
+## Pruebas
+
+Ejecuta todo con:
+
+```powershell
+./test-all.ps1
+```
+
+La suite comprueba, entre otros casos:
+
+- conservación exacta de centavos;
+- rechazo de más de dos decimales;
+- permisos y autenticación;
+- rechazo de archivos falsos y rutas peligrosas;
+- prevención de gastos sin saldo;
+- aprobación y asignación de fondos;
+- integridad de la auditoría;
+- autorización y registros duplicados en el contrato.
+
+Revisa [los controles y límites de seguridad](docs/SEGURIDAD.md) antes de exponer el piloto a usuarios reales.
+
+## Alcance actual
+
+Este repositorio contiene un piloto funcional, no un sistema financiero certificado. El hash prueba integridad después del registro, pero no prueba por sí solo que una transferencia bancaria, una factura o la información proporcionada sean verdaderas. Para producción todavía se requiere conciliación bancaria, verificación legal/fiscal, PostgreSQL administrado, almacenamiento privado, MFA, monitoreo y auditoría externa del contrato.
+
+## Proyecto académico
+
+Materia: Cadena de Bloques, Ingeniería en Informática.
+
+Autores: Diego Flores Murillo y Diego Alexis Galván Roldán.

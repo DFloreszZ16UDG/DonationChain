@@ -1,0 +1,17 @@
+{
+  "name": "donationchain-contracts",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:sepolia": "hardhat ignition deploy ignition/modules/DonationTraceability.ts --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-viem": "^5.0.7",
+    "@types/node": "^26.6.5",
+    "hardhat": "^3.20.0",
+    "typescript": "^7.0.2"
+  }
+}
