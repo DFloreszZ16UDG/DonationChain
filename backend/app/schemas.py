@@ -121,6 +121,11 @@ class DonationTrace(BaseModel):
     campaign_name: str
     allocated: Decimal
     unallocated: Decimal
+    audit_id: str | None
+    audit_hash: str | None
+    anchor_status: AnchorStatus | None
+    blockchain_tx_hash: str | None
+    blockchain_block_number: int | None
     allocations: list[DonationAllocationTrace]
 
 
@@ -191,6 +196,21 @@ class BlockchainStatus(BaseModel):
     writes_enabled: bool
     explorer_url: str
     message: str
+
+
+class BlockchainVerification(BaseModel):
+    audit_id: str
+    record_id: str
+    expected_hash: str
+    on_chain_hash: str | None
+    anchored: bool
+    matches: bool
+    writer: str | None
+    timestamp: int | None
+    metadata_uri: str | None
+    blockchain_tx_hash: str | None
+    blockchain_block_number: int | None
+    explorer_url: str
 
 
 class TimelineEvent(BaseModel):

@@ -1,5 +1,10 @@
 import hardhatToolboxViem from '@nomicfoundation/hardhat-toolbox-viem'
 import { defineConfig } from 'hardhat/config'
+import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
+
+const envFile = resolve(process.cwd(), '.env')
+if (existsSync(envFile)) process.loadEnvFile(envFile)
 
 const sepoliaUrl = process.env.SEPOLIA_RPC_URL
 const deployerKey = process.env.SEPOLIA_PRIVATE_KEY

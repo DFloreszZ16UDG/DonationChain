@@ -24,6 +24,26 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   return response.json() as Promise<T>
 }
 
+export async function downloadApiFile(path: string, filename: string) {
+  const token = localStorage.getItem('donationchain_token')
+  const headers = new Headers()
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+  const response = await fetch(`${API_URL}${path}`, { headers })
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({ detail: 'No fue posible descargar el archivo' }))
+    throw new ApiError(response.status, body.detail || 'No fue posible descargar el archivo')
+  }
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
 export function money(value: string | number) {
   return new Intl.NumberFormat('es-MX', {
     style: 'currency',

@@ -1,12 +1,13 @@
 from decimal import Decimal
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Response, UploadFile
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models import (
     Allocation,
+    AuditLog,
     Campaign,
     CampaignStatus,
     Donation,
@@ -29,6 +30,7 @@ from ..schemas import (
 )
 from ..security import get_current_user, require_roles
 from ..services.audit import record_audit
+from ..services.donation_acknowledgement import build_donation_acknowledgement
 from ..services.receipts import store_receipt
 
 router = APIRouter(tags=["Donaciones y gastos"])
@@ -44,6 +46,14 @@ def _campaign_or_404(db: Session, campaign_id: str) -> Campaign:
 def _ensure_active(campaign: Campaign) -> None:
     if campaign.status != CampaignStatus.ACTIVE:
         raise HTTPException(status_code=409, detail="La campaña no está activa")
+
+
+def _can_view_donation(user: User, donation: Donation, campaign: Campaign) -> bool:
+    return (
+        user.id == donation.donor_id
+        or user.role in (Role.ADMIN, Role.AUDITOR)
+        or (user.role == Role.ORGANIZATION and user.organization_id == campaign.organization_id)
+    )
 
 
 def _create_receipt_model(db: Session, upload: UploadFile, stored, user: User) -> Receipt:
@@ -102,13 +112,18 @@ def donation_trace(
     if donation is None:
         raise HTTPException(status_code=404, detail="Donación no encontrada")
     campaign = _campaign_or_404(db, donation.campaign_id)
-    can_view = (
-        user.id == donation.donor_id
-        or user.role in (Role.ADMIN, Role.AUDITOR)
-        or (user.role == Role.ORGANIZATION and user.organization_id == campaign.organization_id)
-    )
-    if not can_view:
+    if not _can_view_donation(user, donation, campaign):
         raise HTTPException(status_code=403, detail="No puedes consultar esta donación")
+    audit = db.scalar(
+        select(AuditLog)
+        .where(
+            AuditLog.entity_type == "DONATION",
+            AuditLog.entity_id == donation.id,
+            AuditLog.action == "DONATION_RECORDED",
+        )
+        .order_by(AuditLog.created_at.desc())
+        .limit(1)
+    )
     allocations = db.scalars(
         select(Allocation)
         .where(Allocation.donation_id == donation.id)
@@ -135,7 +150,51 @@ def donation_trace(
         campaign_name=campaign.name,
         allocated=allocated,
         unallocated=donation.amount - allocated,
+        audit_id=audit.id if audit else None,
+        audit_hash=audit.entry_hash if audit else None,
+        anchor_status=audit.anchor_status if audit else None,
+        blockchain_tx_hash=audit.blockchain_tx_hash if audit else None,
+        blockchain_block_number=audit.blockchain_block_number if audit else None,
         allocations=traces,
+    )
+
+
+@router.get("/donations/{donation_id}/acknowledgement.pdf")
+def donation_acknowledgement(
+    donation_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    donation = db.get(Donation, donation_id)
+    if donation is None:
+        raise HTTPException(status_code=404, detail="Donación no encontrada")
+    campaign = _campaign_or_404(db, donation.campaign_id)
+    if not _can_view_donation(user, donation, campaign):
+        raise HTTPException(status_code=403, detail="No puedes descargar este comprobante")
+    audit = db.scalar(
+        select(AuditLog)
+        .where(
+            AuditLog.entity_type == "DONATION",
+            AuditLog.entity_id == donation.id,
+            AuditLog.action == "DONATION_RECORDED",
+        )
+        .order_by(AuditLog.created_at.desc())
+        .limit(1)
+    )
+    pdf = build_donation_acknowledgement(
+        donation,
+        campaign,
+        campaign.organization,
+        audit,
+    )
+    return Response(
+        content=pdf,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="donationchain-{donation.id}.pdf"'
+            )
+        },
     )
 
 

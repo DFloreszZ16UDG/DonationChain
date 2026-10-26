@@ -59,6 +59,11 @@ export interface DonationTrace {
   campaign_name: string
   allocated: string
   unallocated: string
+  audit_id: string | null
+  audit_hash: string | null
+  anchor_status: string | null
+  blockchain_tx_hash: string | null
+  blockchain_block_number: number | null
   allocations: Array<{
     allocation_id: string
     expense_id: string
@@ -92,4 +97,19 @@ export interface BlockchainStatus {
   writes_enabled: boolean
   explorer_url: string
   message: string
+}
+
+export interface BlockchainVerification {
+  audit_id: string
+  record_id: string
+  expected_hash: string
+  on_chain_hash: string | null
+  anchored: boolean
+  matches: boolean
+  writer: string | null
+  timestamp: number | null
+  metadata_uri: string | null
+  blockchain_tx_hash: string | null
+  blockchain_block_number: number | null
+  explorer_url: string
 }

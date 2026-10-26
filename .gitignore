@@ -48,3 +48,5 @@ backend/*.sqlite*
 .coverage
 htmlcov/
 .run/
+output/
+tmp/

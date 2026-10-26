@@ -1,5 +1,6 @@
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$env:PYTHONPATH = ""
 
 Write-Host "Preparando API de Python 3.13..."
 py -3.13 -m venv "$Root\backend\.venv"

@@ -1,24 +1,62 @@
 import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined'
 import ArrowForward from '@mui/icons-material/ArrowForward'
+import DownloadOutlined from '@mui/icons-material/DownloadOutlined'
+import VerifiedOutlined from '@mui/icons-material/VerifiedOutlined'
 import PaymentsOutlined from '@mui/icons-material/PaymentsOutlined'
-import { Alert, Box, Button, Card, CardContent, CircularProgress, Container, Grid, LinearProgress, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, Card, CardContent, Chip, CircularProgress, Container, Grid, LinearProgress, Stack, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api, money } from '../api'
-import type { Donation, DonationTrace } from '../types'
+import { api, downloadApiFile, money } from '../api'
+import type { BlockchainStatus, BlockchainVerification, Donation, DonationTrace } from '../types'
 
 export default function MyDonationsPage() {
   const [traces, setTraces] = useState<DonationTrace[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [chain, setChain] = useState<BlockchainStatus | null>(null)
+  const [checks, setChecks] = useState<Record<string, string>>({})
+  const [working, setWorking] = useState('')
 
   useEffect(() => {
-    api<Donation[]>('/me/donations')
-      .then((donations) => Promise.all(donations.map((item) => api<DonationTrace>(`/donations/${item.id}/trace`))))
-      .then(setTraces)
+    Promise.all([api<Donation[]>('/me/donations'), api<BlockchainStatus>('/blockchain/status')])
+      .then(async ([donations, status]) => {
+        setChain(status)
+        setTraces(await Promise.all(donations.map((item) => api<DonationTrace>(`/donations/${item.id}/trace`))))
+      })
       .catch((reason: Error) => setError(reason.message))
       .finally(() => setLoading(false))
   }, [])
+
+  async function downloadAcknowledgement(donationId: string) {
+    setWorking(donationId)
+    setError('')
+    try {
+      await downloadApiFile(`/donations/${donationId}/acknowledgement.pdf`, `donationchain-${donationId}.pdf`)
+    } catch (reason) {
+      setError((reason as Error).message)
+    } finally {
+      setWorking('')
+    }
+  }
+
+  async function verifyOnChain(trace: DonationTrace) {
+    if (!trace.audit_id) return
+    setWorking(trace.donation.id)
+    setError('')
+    try {
+      const result = await api<BlockchainVerification>(`/blockchain/verify/${trace.audit_id}`)
+      setChecks((current) => ({
+        ...current,
+        [trace.donation.id]: result.matches
+          ? 'El hash local coincide con el registro de Ethereum Sepolia.'
+          : 'La evidencia no coincide con Blockchain.',
+      }))
+    } catch (reason) {
+      setError((reason as Error).message)
+    } finally {
+      setWorking('')
+    }
+  }
 
   return (
     <Container maxWidth="lg" sx={{ py: 7 }}>
@@ -38,8 +76,23 @@ export default function MyDonationsPage() {
             </Stack>
             <LinearProgress variant="determinate" value={Math.min(100, percent)} sx={{ height: 9, borderRadius: 8, mt: 3, mb: 1 }} />
             <Grid container spacing={2} sx={{ mb: 3 }}><Grid size={6}><Typography variant="caption">Asignado a gastos</Typography><Typography fontWeight={800} color="primary">{money(trace.allocated)}</Typography></Grid><Grid size={6}><Typography variant="caption">Aún disponible</Typography><Typography fontWeight={800}>{money(trace.unallocated)}</Typography></Grid></Grid>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ sm: 'center' }} sx={{ mb: 2 }}>
+              <Chip
+                size="small"
+                color={trace.anchor_status === 'CONFIRMED' ? 'success' : trace.anchor_status === 'PENDING' ? 'warning' : 'default'}
+                icon={trace.anchor_status === 'CONFIRMED' ? <VerifiedOutlined /> : undefined}
+                label={trace.anchor_status === 'CONFIRMED' ? 'Protegida en Blockchain' : trace.anchor_status === 'PENDING' ? 'Pendiente de Blockchain' : 'Auditoría local'}
+              />
+              {trace.audit_hash ? <Typography variant="caption" color="text.secondary" sx={{ overflowWrap: 'anywhere' }}>Hash: {trace.audit_hash}</Typography> : null}
+            </Stack>
             {trace.allocations.length ? <Stack spacing={1.2}>{trace.allocations.map((allocation) => <Box key={allocation.allocation_id} sx={{ display: 'flex', gap: 2, justifyContent: 'space-between', p: 2, borderRadius: 2, backgroundColor: '#f4f7f3' }}><Box><Stack direction="row" spacing={1} alignItems="center"><PaymentsOutlined fontSize="small" color="secondary" /><Typography fontWeight={800}>{allocation.concept}</Typography></Stack><Typography variant="body2" color="text.secondary">{allocation.description}</Typography></Box><Typography fontWeight={850}>{money(allocation.amount)}</Typography></Box>)}</Stack> : <Alert severity="info">Esta aportación aún no ha sido utilizada en un gasto aprobado.</Alert>}
-            <Button component={Link} to={`/campaigns/${trace.donation.campaign_id}`} endIcon={<ArrowForward />} sx={{ mt: 2 }}>Ver campaña completa</Button>
+            {checks[trace.donation.id] ? <Alert severity={checks[trace.donation.id].startsWith('El hash') ? 'success' : 'error'} sx={{ mt: 2 }}>{checks[trace.donation.id]}</Alert> : null}
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ mt: 2 }}>
+              <Button startIcon={<DownloadOutlined />} disabled={working === trace.donation.id} onClick={() => downloadAcknowledgement(trace.donation.id)}>Descargar acuse PDF</Button>
+              {trace.anchor_status === 'CONFIRMED' && trace.audit_id && chain?.contract_configured ? <Button startIcon={<VerifiedOutlined />} disabled={working === trace.donation.id} onClick={() => verifyOnChain(trace)}>Verificar en Blockchain</Button> : null}
+              {trace.blockchain_tx_hash && chain ? <Button href={`${chain.explorer_url}/tx/${trace.blockchain_tx_hash}`} target="_blank" rel="noreferrer">Ver en Sepolia</Button> : null}
+              <Button component={Link} to={`/campaigns/${trace.donation.campaign_id}`} endIcon={<ArrowForward />}>Ver campaña completa</Button>
+            </Stack>
           </CardContent></Card>
         })}
       </Stack>

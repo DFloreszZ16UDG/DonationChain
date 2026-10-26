@@ -8,6 +8,7 @@ $Backend = Join-Path $Root "backend"
 $Frontend = Join-Path $Root "frontend"
 $VenvPython = Join-Path $Backend ".venv\Scripts\python.exe"
 $EnvFile = Join-Path $Backend ".env"
+$env:PYTHONPATH = ""
 
 function Write-Step([string]$Message) {
     Write-Host "`n==> $Message" -ForegroundColor Cyan

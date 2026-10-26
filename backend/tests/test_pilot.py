@@ -58,6 +58,23 @@ def test_complete_donation_expense_and_audit_flow(client, headers, active_campai
     assert Decimal(trace.json()["allocated"]) == Decimal("200.05")
     assert Decimal(trace.json()["unallocated"]) == Decimal("800.05")
     assert trace.json()["allocations"][0]["concept"] == "Compra de alimentos"
+    assert trace.json()["audit_id"]
+    assert len(trace.json()["audit_hash"]) == 64
+
+    acknowledgement = client.get(
+        f"/api/donations/{donation['id']}/acknowledgement.pdf",
+        headers=headers["donor"],
+    )
+    assert acknowledgement.status_code == 200
+    assert acknowledgement.headers["content-type"] == "application/pdf"
+    assert "attachment" in acknowledgement.headers["content-disposition"]
+    assert acknowledgement.content.startswith(b"%PDF")
+
+    blockchain_check = client.get(
+        f"/api/blockchain/verify/{trace.json()['audit_id']}"
+    )
+    assert blockchain_check.status_code == 503
+    assert "Smart Contract" in blockchain_check.json()["detail"]
 
     audit = client.get("/api/audit/verify", headers=headers["auditor"])
     assert audit.status_code == 200

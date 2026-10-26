@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+unset PYTHONPATH
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKEND="$ROOT/backend"

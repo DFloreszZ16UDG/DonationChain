@@ -17,8 +17,9 @@ El proyecto evolucionó desde una simulación de escritorio hacia un piloto con 
 - Carga de comprobantes PDF, PNG o JPEG con límite de 10 MB.
 - Verificación posterior del SHA-256 de un comprobante.
 - Historial público por campaña y saldos recaudado, utilizado y disponible.
+- Acuse PDF descargable para cada donación, con folio y evidencia criptográfica.
 - Cadena de auditoría local enlazada mediante hashes.
-- Smart Contract sin criptomoneda para anclar evidencia en Sepolia.
+- Controles para anclar y verificar evidencia mediante un Smart Contract en Sepolia.
 - Pruebas integrales, análisis estático y auditorías de dependencias.
 
 ## Arquitectura
@@ -116,7 +117,13 @@ Todas usan exclusivamente la contraseña local definida en `DEMO_PASSWORD`. Esta
 
 Ethereum utiliza Proof of Stake y Sepolia es su red de prueba recomendada para aplicaciones. DonationChain usa ese consenso existente: no implementa una minería ni un “Proof of State” propio.
 
+La pantalla de auditoría permite que el administrador envíe una entrada al contrato y que posteriormente se compare el hash local contra el hash almacenado en Sepolia. La vista del donante muestra el estado del anclaje, la transacción y una verificación directa cuando el contrato está configurado.
+
 La API ya puede consultar Sepolia. Para desplegar y habilitar escrituras hacen falta una cartera separada, ETH de prueba y variables privadas. Sigue [la guía del piloto](docs/DESPLIEGUE_PILOTO.md). Nunca subas una clave privada a GitHub.
+
+## Comprobante del donante
+
+En **Mi dinero**, cada donación permite descargar un acuse PDF con folio, campaña, organización, monto, fecha, hash de auditoría y estado Blockchain. Mientras no exista una pasarela de pagos, el documento se identifica expresamente como acuse de registro de demostración: no es un recibo fiscal ni confirma por sí solo una transferencia bancaria.
 
 ## Pruebas
 

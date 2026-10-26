@@ -2,6 +2,7 @@ $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $EnvFile = "$Root\backend\.env"
 try { $Host.UI.RawUI.WindowTitle = "DonationChain API" } catch {}
+$env:PYTHONPATH = ""
 
 if (-not (Test-Path -LiteralPath $EnvFile)) {
     Write-Error "Falta backend/.env. Copia backend/.env.example y reemplaza los valores de ejemplo."

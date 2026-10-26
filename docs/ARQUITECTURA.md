@@ -41,6 +41,16 @@ API (FastAPI + autorización por roles)
 7. Si el contrato está configurado, un administrador puede anclar esa entrada en Sepolia.
 8. La vista pública actualiza el total utilizado y muestra la huella del comprobante.
 
+## Flujo de una donación y su acuse
+
+1. El donante registra una aportación para una campaña activa.
+2. La API conserva el monto exacto, el folio y la relación con el usuario.
+3. Se crea una entrada de auditoría con un hash SHA-256 enlazado al registro anterior.
+4. El donante descarga un acuse PDF con los datos y el hash de evidencia.
+5. El administrador ancla la entrada en el Smart Contract de Sepolia.
+6. La plataforma consulta el contrato y comprueba que el hash local coincida con el almacenado en Blockchain.
+7. El donante puede abrir la transacción en el explorador de Sepolia.
+
 ## Modelo de confianza
 
 Blockchain detecta alteraciones posteriores, pero no demuestra por sí sola que una factura sea auténtica. La autenticidad inicial depende de la revisión, la identidad de la organización y, en un despliegue real, validaciones fiscales o bancarias adicionales.

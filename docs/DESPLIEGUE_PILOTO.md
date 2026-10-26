@@ -16,10 +16,11 @@ El piloto consulta Ethereum Sepolia, red de prueba basada en Proof of Stake, con
 1. Crear una cartera exclusiva para pruebas.
 2. Obtener ETH de prueba desde un faucet confiable.
 3. Copiar `contracts/.env.example` como `contracts/.env` y configurar la RPC y clave de prueba solo de forma local.
-4. Cargar esas variables en la terminal y ejecutar `npm run deploy:sepolia` dentro de `contracts/`.
+4. Ejecutar `npm run deploy:sepolia` dentro de `contracts/`; Hardhat carga automáticamente el archivo local `.env`.
 5. Copiar la dirección desplegada a `BLOCKCHAIN_CONTRACT_ADDRESS` en `backend/.env`.
 6. Configurar `BLOCKCHAIN_PRIVATE_KEY` con una cuenta autorizada mediante `setWriter`.
-7. Reiniciar la API y usar `POST /api/blockchain/anchor/{audit_id}` como administrador.
+7. Reiniciar la API, entrar como administrador y abrir **Auditoría**.
+8. Usar **Anclar en Sepolia** y después **Verificar hash**. La interfaz mostrará el enlace de la transacción.
 
 La clave debe pertenecer únicamente a una cuenta de prueba. El contrato no recibe ni transfiere donaciones.
 
