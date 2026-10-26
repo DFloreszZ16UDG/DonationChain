@@ -121,6 +121,8 @@ La pantalla de auditoría permite que el administrador envíe una entrada al con
 
 La API ya puede consultar Sepolia. Para desplegar y habilitar escrituras hacen falta una cartera separada, ETH de prueba y variables privadas. Sigue [la guía del piloto](docs/DESPLIEGUE_PILOTO.md). Nunca subas una clave privada a GitHub.
 
+El contrato de demostración actual está desplegado en Sepolia en [`0x5c1F526eff76983ade86D6981c23d7b9D8E6d597`](https://sepolia.etherscan.io/address/0x5c1F526eff76983ade86D6981c23d7b9D8E6d597). La API local quedó preparada para anclar y verificar hashes contra este contrato sin almacenar comprobantes ni datos personales en la cadena.
+
 ## Comprobante del donante
 
 En **Mi dinero**, cada donación permite descargar un acuse PDF con folio, campaña, organización, monto, fecha, hash de auditoría y estado Blockchain. Mientras no exista una pasarela de pagos, el documento se identifica expresamente como acuse de registro de demostración: no es un recibo fiscal ni confirma por sí solo una transferencia bancaria.

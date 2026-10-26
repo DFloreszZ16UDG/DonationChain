@@ -22,6 +22,7 @@ artifacts/
 cache/
 typechain-types/
 ignition/deployments/
+contracts/ignition/deployments/
 
 # Configuración de editores
 .vscode/

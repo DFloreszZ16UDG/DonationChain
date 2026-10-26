@@ -6,12 +6,15 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
+    "wallet:create": "node scripts/create-test-wallet.mjs",
+    "configure:backend": "node scripts/sync-backend-env.mjs",
     "deploy:sepolia": "hardhat ignition deploy ignition/modules/DonationTraceability.ts --network sepolia"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox-viem": "^5.0.7",
     "@types/node": "^26.6.5",
     "hardhat": "^3.20.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "viem": "^2.57.10"
   }
 }

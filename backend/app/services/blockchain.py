@@ -76,6 +76,14 @@ class AnchorVerification:
     metadata_uri: str | None
 
 
+def _eip1559_fees(base_fee: int, suggested_priority_fee: int) -> tuple[int, int]:
+    """Return a valid priority/max fee pair for an EIP-1559 transaction."""
+
+    priority_fee = max(int(suggested_priority_fee), 1)
+    max_fee = max((int(base_fee) * 2) + priority_fee, priority_fee)
+    return priority_fee, max_fee
+
+
 def network_status() -> NetworkStatus:
     settings = get_settings()
     if not settings.blockchain_rpc_url:
@@ -152,15 +160,22 @@ def anchor_audit_entry(db: Session, audit: AuditLog) -> AuditLog:
             }
         )
         transaction["gas"] = web3.eth.estimate_gas(transaction)
-        transaction["maxPriorityFeePerGas"] = web3.to_wei(1, "gwei")
-        transaction["maxFeePerGas"] = web3.eth.gas_price * 2
+        latest_block = web3.eth.get_block("latest")
+        base_fee = int(latest_block.get("baseFeePerGas") or web3.eth.gas_price)
+        try:
+            suggested_priority_fee = int(web3.eth.max_priority_fee)
+        except Exception:  # Some public RPCs do not implement eth_maxPriorityFeePerGas.
+            suggested_priority_fee = max(int(web3.eth.gas_price) - base_fee, 1)
+        priority_fee, max_fee = _eip1559_fees(base_fee, suggested_priority_fee)
+        transaction["maxPriorityFeePerGas"] = priority_fee
+        transaction["maxFeePerGas"] = max_fee
         signed = account.sign_transaction(transaction)
         tx_hash = web3.eth.send_raw_transaction(signed.raw_transaction)
         receipt = web3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
         if receipt.status != 1:
             raise RuntimeError("La transacción fue revertida")
         audit.anchor_status = AnchorStatus.CONFIRMED
-        audit.blockchain_tx_hash = tx_hash.hex()
+        audit.blockchain_tx_hash = Web3.to_hex(tx_hash)
         audit.blockchain_block_number = receipt.blockNumber
     except Exception:
         audit.anchor_status = AnchorStatus.FAILED
