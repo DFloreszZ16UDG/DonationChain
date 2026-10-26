@@ -41,6 +41,28 @@ Requisitos:
 - Node.js 22.13 o posterior.
 - PowerShell.
 
+### Opción sencilla
+
+Después de descargar o clonar el repositorio, abre la carpeta y haz doble clic en:
+
+```text
+run.bat
+```
+
+El archivo prepara automáticamente las dependencias la primera vez, crea una configuración local segura, inicia la API y la página en dos ventanas y abre `http://127.0.0.1:5173`.
+
+Las cuentas de prueba utilizan inicialmente la contraseña `Donation123!`. La configuración permanece únicamente en `backend/.env` y Git no la sube.
+
+En Git Bash, Linux o macOS se puede usar:
+
+```bash
+bash run.sh
+```
+
+No es necesario compilar ni desplegar el Smart Contract para ejecutar el piloto local.
+
+### Opción manual
+
 Instala las dependencias:
 
 ```powershell
