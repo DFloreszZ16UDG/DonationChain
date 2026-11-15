@@ -1,14 +1,21 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from ..config import get_settings
 from ..database import get_db
 from ..models import Role, User
+from ..rate_limit import LoginRateLimiter
 from ..schemas import LoginRequest, TokenOut, UserCreate, UserOut
 from ..security import create_access_token, get_current_user, hash_password, verify_password
 from ..services.audit import record_audit
 
 router = APIRouter(prefix="/auth", tags=["Autenticación"])
+settings = get_settings()
+login_limiter = LoginRateLimiter(
+    settings.login_rate_limit_attempts,
+    settings.login_rate_limit_window_seconds,
+)
 
 
 @router.post("/register", response_model=TokenOut, status_code=status.HTTP_201_CREATED)
@@ -31,12 +38,22 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenOut)
-def login(payload: LoginRequest, db: Session = Depends(get_db)):
+def login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)):
+    client_host = request.client.host if request.client else "unknown"
+    limiter_key = f"{client_host}:{payload.email.lower()}"
+    retry_after = login_limiter.check(limiter_key)
+    if retry_after is not None:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Demasiados intentos. Intenta nuevamente más tarde",
+            headers={"Retry-After": str(retry_after)},
+        )
     user = db.scalar(select(User).where(User.email == payload.email.lower()))
     if user is None or not user.active or not verify_password(payload.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Correo o contraseña incorrectos"
         )
+    login_limiter.clear(limiter_key)
     return TokenOut(access_token=create_access_token(user), user=user)
 
 

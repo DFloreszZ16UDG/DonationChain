@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#16352b" flood-opacity="0.13"/>
+    </filter>
+    <marker id="arrow-green" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#21745c"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#315ea8"/>
+    </marker>
+    <style>
+      .title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#123b2f}
+      .subtitle{font:400 20px 'Segoe UI',Arial,sans-serif;fill:#52665f}
+      .lane{font:700 22px 'Segoe UI',Arial,sans-serif;letter-spacing:.7px}
+      .h{font:700 23px 'Segoe UI',Arial,sans-serif;fill:#163b30}
+      .b{font:400 17px 'Segoe UI',Arial,sans-serif;fill:#455a53}
+      .small{font:600 15px 'Segoe UI',Arial,sans-serif;fill:#52665f}
+      .pill{font:700 16px 'Segoe UI',Arial,sans-serif}
+      .edge{fill:none;stroke:#21745c;stroke-width:5;marker-end:url(#arrow-green)}
+      .edgeBlue{fill:none;stroke:#315ea8;stroke-width:5;marker-end:url(#arrow-blue)}
+      .edgeReturn{fill:none;stroke:#71827c;stroke-width:4;stroke-dasharray:12 10;marker-end:url(#arrow-green)}
+    </style>
+  </defs>
+
+  <rect width="1800" height="1120" fill="#f5f7f3"/>
+  <circle cx="1630" cy="110" r="150" fill="#dcebe4" opacity=".65"/>
+  <circle cx="170" cy="1040" r="190" fill="#e8eee8" opacity=".9"/>
+
+  <text x="90" y="82" class="title">Arquitectura general de DonationChain</text>
+  <text x="90" y="120" class="subtitle">Sistema híbrido: datos completos fuera de la cadena y evidencia verificable en Ethereum Sepolia</text>
+
+  <rect x="70" y="165" width="1660" height="210" rx="28" fill="#edf5f0" stroke="#b9d4c8" stroke-width="2"/>
+  <text x="100" y="206" class="lane" fill="#21654f">USUARIOS Y EXPERIENCIA WEB</text>
+
+  <g filter="url(#shadow)">
+    <rect x="105" y="235" width="280" height="105" rx="20" fill="#ffffff"/>
+    <rect x="430" y="235" width="280" height="105" rx="20" fill="#ffffff"/>
+    <rect x="755" y="235" width="280" height="105" rx="20" fill="#ffffff"/>
+    <rect x="1080" y="235" width="280" height="105" rx="20" fill="#ffffff"/>
+    <rect x="1405" y="235" width="275" height="105" rx="20" fill="#0f5b45"/>
+  </g>
+  <text x="245" y="280" text-anchor="middle" class="h">Donante</text><text x="245" y="310" text-anchor="middle" class="b">Consulta su dinero</text>
+  <text x="570" y="280" text-anchor="middle" class="h">Organización</text><text x="570" y="310" text-anchor="middle" class="b">Campañas y gastos</text>
+  <text x="895" y="280" text-anchor="middle" class="h">Auditor</text><text x="895" y="310" text-anchor="middle" class="b">Aprueba o rechaza</text>
+  <text x="1220" y="280" text-anchor="middle" class="h">Administrador</text><text x="1220" y="310" text-anchor="middle" class="b">Usuarios y anclajes</text>
+  <text x="1542" y="280" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#fff">Frontend React</text>
+  <text x="1542" y="310" text-anchor="middle" font-family="Segoe UI,Arial" font-size="17" fill="#dcefe8">Vite + Node.js</text>
+
+  <path d="M385 287 H1405" class="edge"/>
+  <path d="M710 287 H1405" class="edge"/>
+  <path d="M1035 287 H1405" class="edge"/>
+  <path d="M1360 287 H1405" class="edge"/>
+
+  <rect x="70" y="410" width="1660" height="350" rx="28" fill="#ffffff" stroke="#d5ded9" stroke-width="2"/>
+  <text x="360" y="452" class="lane" fill="#42584f">SISTEMA FUERA DE BLOCKCHAIN · OFF-CHAIN</text>
+
+  <g filter="url(#shadow)">
+    <rect x="120" y="500" width="330" height="180" rx="22" fill="#f4faf6" stroke="#b7d7c9" stroke-width="2"/>
+    <rect x="545" y="500" width="340" height="180" rx="22" fill="#f4faf6" stroke="#b7d7c9" stroke-width="2"/>
+    <rect x="980" y="485" width="310" height="95" rx="20" fill="#fff8e8" stroke="#e6c879" stroke-width="2"/>
+    <rect x="980" y="605" width="310" height="95" rx="20" fill="#fff8e8" stroke="#e6c879" stroke-width="2"/>
+    <rect x="1385" y="500" width="295" height="180" rx="22" fill="#eef4fb" stroke="#a9bfdf" stroke-width="2"/>
+  </g>
+
+  <text x="285" y="545" text-anchor="middle" class="h">API FastAPI</text>
+  <text x="285" y="580" text-anchor="middle" class="b">Autenticación JWT</text>
+  <text x="285" y="610" text-anchor="middle" class="b">Validación y roles</text>
+  <text x="285" y="640" text-anchor="middle" class="b">Reglas de negocio</text>
+
+  <text x="715" y="545" text-anchor="middle" class="h">Servicios del sistema</text>
+  <text x="715" y="580" text-anchor="middle" class="b">Campañas · Donaciones · Gastos</text>
+  <text x="715" y="610" text-anchor="middle" class="b">Aprobaciones y asignaciones</text>
+  <text x="715" y="640" text-anchor="middle" class="b">Historial de auditoría</text>
+
+  <text x="1135" y="525" text-anchor="middle" class="h">Base de datos relacional</text>
+  <text x="1135" y="555" text-anchor="middle" class="b">SQLite local · PostgreSQL producción</text>
+  <text x="1135" y="645" text-anchor="middle" class="h">Comprobantes externos</text>
+  <text x="1135" y="675" text-anchor="middle" class="b">PDF e imágenes fuera de la cadena</text>
+
+  <text x="1532" y="545" text-anchor="middle" class="h">SHA-256 + Web3.py</text>
+  <text x="1532" y="580" text-anchor="middle" class="b">Calcula hashes</text>
+  <text x="1532" y="610" text-anchor="middle" class="b">Firma transacciones</text>
+  <text x="1532" y="640" text-anchor="middle" class="b">Consulta recibos</text>
+
+  <path d="M1542 340 V430 H285 V500" class="edge"/>
+  <path d="M450 590 H545" class="edge"/>
+  <path d="M885 545 H980" class="edge"/>
+  <path d="M885 625 H980" class="edge"/>
+  <path d="M1290 535 H1385" class="edge"/>
+  <path d="M1290 655 H1385" class="edge"/>
+
+  <rect x="70" y="800" width="1660" height="245" rx="28" fill="#edf3fb" stroke="#9eb6da" stroke-width="2"/>
+  <text x="400" y="842" class="lane" fill="#315ea8">RED BLOCKCHAIN · ON-CHAIN</text>
+
+  <g filter="url(#shadow)">
+    <rect x="140" y="885" width="300" height="105" rx="20" fill="#ffffff"/>
+    <rect x="565" y="885" width="330" height="105" rx="20" fill="#ffffff"/>
+    <rect x="1020" y="885" width="320" height="105" rx="20" fill="#315ea8"/>
+    <rect x="1465" y="885" width="205" height="105" rx="20" fill="#ffffff"/>
+  </g>
+  <text x="290" y="928" text-anchor="middle" class="h">Nodo Ethereum</text><text x="290" y="960" text-anchor="middle" class="b">JSON-RPC</text>
+  <text x="730" y="922" text-anchor="middle" class="h">Contrato inteligente</text><text x="730" y="953" text-anchor="middle" class="b">anchorRecord() · verifyRecord()</text><text x="730" y="977" text-anchor="middle" class="small">DonationTraceability</text>
+  <text x="1180" y="925" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#fff">Ethereum Sepolia</text><text x="1180" y="957" text-anchor="middle" font-family="Segoe UI,Arial" font-size="17" fill="#dfe9f8">Validadores Proof of Stake</text>
+  <text x="1568" y="928" text-anchor="middle" class="h">Explorador</text><text x="1568" y="960" text-anchor="middle" class="b">Tx · Bloque · Estado</text>
+
+  <path d="M1532 680 V825 H290 V885" class="edgeBlue"/>
+  <path d="M440 938 H565" class="edgeBlue"/>
+  <path d="M895 938 H1020" class="edgeBlue"/>
+  <path d="M1340 938 H1465" class="edgeBlue"/>
+  <path d="M1180 990 V1025 H715 V680" class="edgeReturn"/>
+
+  <rect x="110" y="1065" width="22" height="22" rx="5" fill="#f4faf6" stroke="#7cae98"/>
+  <text x="145" y="1082" class="small">Información completa y archivos fuera de Blockchain</text>
+  <rect x="615" y="1065" width="22" height="22" rx="5" fill="#315ea8"/>
+  <text x="650" y="1082" class="small">Hashes y evidencia verificable en Sepolia</text>
+  <path d="M1160 1076 H1230" class="edgeReturn"/>
+  <text x="1250" y="1082" class="small">Confirmación y consulta</text>
+</svg>

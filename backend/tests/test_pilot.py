@@ -1,7 +1,8 @@
 from decimal import Decimal
 
+from app.cli import create_admin
 from app.database import SessionLocal
-from app.models import Allocation, Expense, ExpenseStatus, Receipt
+from app.models import Allocation, Expense, ExpenseStatus, Receipt, Role, User
 from app.services.receipts import receipt_path
 
 
@@ -163,3 +164,30 @@ def test_insufficient_balance_prevents_expense_approval(client, headers, active_
     )
     assert review.status_code == 409
     assert "saldo suficiente" in review.json()["detail"]
+
+
+def test_readiness_and_security_headers(client):
+    response = client.get("/api/ready")
+    assert response.status_code == 200
+    assert response.json()["database"] == "ok"
+    assert response.json()["storage"] == "local"
+    assert response.headers["x-content-type-options"] == "nosniff"
+    assert response.headers["x-frame-options"] == "DENY"
+    assert response.headers["cache-control"] == "no-store"
+
+
+def test_console_bootstrap_creates_admin(capsys):
+    create_admin("bootstrap@example.com", "Bootstrap Admin", "SecureBootstrap123!")
+    with SessionLocal() as db:
+        user = db.query(User).filter_by(email="bootstrap@example.com").one()
+        assert user.role == Role.ADMIN
+    assert "Administrador creado" in capsys.readouterr().out
+
+
+def test_login_rate_limit_blocks_repeated_failures(client):
+    payload = {"email": "blocked@example.com", "password": "WrongPassword123!"}
+    for _ in range(8):
+        assert client.post("/api/auth/login", json=payload).status_code == 401
+    blocked = client.post("/api/auth/login", json=payload)
+    assert blocked.status_code == 429
+    assert int(blocked.headers["retry-after"]) >= 1

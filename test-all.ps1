@@ -12,7 +12,7 @@ Push-Location "$Root\backend"
 $Python = ".\.venv\Scripts\python.exe"
 & $Python -m pytest -q
 Assert-Success "Pruebas del backend"
-& $Python -m ruff check app tests
+& $Python -m ruff check app tests migrations
 Assert-Success "Ruff"
 & $Python -m bandit -q -r app
 Assert-Success "Bandit"
