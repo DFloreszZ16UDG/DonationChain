@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1000" viewBox="0 0 1800 1000">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6f8f4"/>
+      <stop offset="1" stop-color="#eef4f0"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#143a32" flood-opacity=".13"/>
+    </filter>
+    <marker id="arrowGreen" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto">
+      <path d="M0,0 L14,7 L0,14 Z" fill="#19745e"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto">
+      <path d="M0,0 L14,7 L0,14 Z" fill="#3565ad"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto">
+      <path d="M0,0 L14,7 L0,14 Z" fill="#71827b"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto">
+      <path d="M0,0 L14,7 L0,14 Z" fill="#c55a5a"/>
+    </marker>
+    <style>
+      .title{font:700 44px Arial,sans-serif;fill:#083d33}.subtitle{font:400 21px Arial,sans-serif;fill:#425b53}
+      .lane{font:700 22px Arial,sans-serif;letter-spacing:.5px}.h{font:700 22px Arial,sans-serif;fill:#083d33}
+      .p{font:400 16px Arial,sans-serif;fill:#40564f}.small{font:400 14px Arial,sans-serif;fill:#52675f}
+      .whiteh{font:700 22px Arial,sans-serif;fill:#fff}.whitep{font:400 16px Arial,sans-serif;fill:#e8f4ef}
+      .num{font:700 17px Arial,sans-serif;fill:#083d33}.label{font:700 14px Arial,sans-serif;letter-spacing:.8px}
+    </style>
+  </defs>
+
+  <rect width="1800" height="1000" fill="url(#bg)"/>
+  <circle cx="1650" cy="60" r="230" fill="#dcebe4" opacity=".7"/>
+  <circle cx="95" cy="970" r="200" fill="#e1ece5" opacity=".8"/>
+
+  <text x="82" y="76" class="title">Integridad de comprobantes con SHA-256</text>
+  <text x="82" y="112" class="subtitle">El archivo permanece fuera de Blockchain; su huella permite detectar cualquier modificación posterior</text>
+
+  <rect x="68" y="155" width="1664" height="340" rx="28" fill="#ffffff" stroke="#a9d4c3" stroke-width="2"/>
+  <text x="96" y="195" class="lane" fill="#11604e">REGISTRO DEL COMPROBANTE</text>
+
+  <g filter="url(#shadow)">
+    <rect x="110" y="240" width="280" height="170" rx="22" fill="#ffffff"/>
+    <circle cx="150" cy="279" r="19" fill="#e5a33a"/><text x="150" y="285" text-anchor="middle" class="num">1</text>
+    <text x="250" y="286" text-anchor="middle" class="h">Archivo recibido</text>
+    <text x="250" y="324" text-anchor="middle" class="p">PDF · PNG · JPEG</text>
+    <text x="250" y="352" text-anchor="middle" class="small">Comprobante de donación o gasto</text>
+  </g>
+
+  <path d="M390 325 H475" stroke="#19745e" stroke-width="5" fill="none" marker-end="url(#arrowGreen)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="500" y="240" width="310" height="170" rx="22" fill="#f3faf6" stroke="#8bc6b0" stroke-width="2"/>
+    <circle cx="540" cy="279" r="19" fill="#e5a33a"/><text x="540" y="285" text-anchor="middle" class="num">2</text>
+    <text x="655" y="286" text-anchor="middle" class="h">Validación segura</text>
+    <text x="655" y="322" text-anchor="middle" class="p">Firma binaria y tipo real</text>
+    <text x="655" y="350" text-anchor="middle" class="p">Tamaño máximo: 10 MB</text>
+    <text x="655" y="378" text-anchor="middle" class="small">Nombre sanitizado y UUID interno</text>
+  </g>
+
+  <path d="M810 325 H895" stroke="#19745e" stroke-width="5" fill="none" marker-end="url(#arrowGreen)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="920" y="240" width="280" height="170" rx="22" fill="#0d654f"/>
+    <circle cx="960" cy="279" r="19" fill="#e5a33a"/><text x="960" y="285" text-anchor="middle" class="num">3</text>
+    <text x="1060" y="286" text-anchor="middle" class="whiteh">SHA-256</text>
+    <text x="1060" y="324" text-anchor="middle" class="whitep">Lectura de bytes</text>
+    <text x="1060" y="352" text-anchor="middle" class="whitep">Hash hexadecimal de 64 caracteres</text>
+  </g>
+
+  <path d="M1200 325 H1285" stroke="#19745e" stroke-width="5" fill="none" marker-end="url(#arrowGreen)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="1310" y="220" width="350" height="210" rx="22" fill="#fff8e9" stroke="#e5b75b" stroke-width="2"/>
+    <circle cx="1350" cy="259" r="19" fill="#e5a33a"/><text x="1350" y="265" text-anchor="middle" class="num">4</text>
+    <text x="1515" y="266" text-anchor="middle" class="h">Almacenamiento off-chain</text>
+    <text x="1485" y="306" text-anchor="middle" class="p">Base de datos: hash + metadatos</text>
+    <text x="1485" y="336" text-anchor="middle" class="p">Servidor: archivo original</text>
+    <rect x="1386" y="363" width="198" height="36" rx="18" fill="#f2d18c"/>
+    <text x="1485" y="387" text-anchor="middle" class="label" fill="#6f4b09">NO SE SUBE EL ARCHIVO</text>
+  </g>
+
+  <rect x="68" y="535" width="1664" height="375" rx="28" fill="#eef4fd" stroke="#8eafe5" stroke-width="2"/>
+  <text x="96" y="578" class="lane" fill="#2d5da7">VERIFICACIÓN POSTERIOR</text>
+
+  <g filter="url(#shadow)">
+    <rect x="105" y="630" width="250" height="150" rx="22" fill="#ffffff"/>
+    <text x="230" y="680" text-anchor="middle" class="h">Archivo presentado</text>
+    <text x="230" y="715" text-anchor="middle" class="p">El usuario vuelve a subir</text>
+    <text x="230" y="742" text-anchor="middle" class="small">el comprobante que desea verificar</text>
+  </g>
+  <path d="M355 705 H440" stroke="#3565ad" stroke-width="5" fill="none" marker-end="url(#arrowBlue)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="465" y="630" width="250" height="150" rx="22" fill="#ffffff"/>
+    <text x="590" y="680" text-anchor="middle" class="h">Nuevo SHA-256</text>
+    <text x="590" y="715" text-anchor="middle" class="p">Mismos bytes</text>
+    <text x="590" y="742" text-anchor="middle" class="small">mismo resultado esperado</text>
+  </g>
+  <path d="M715 705 H800" stroke="#3565ad" stroke-width="5" fill="none" marker-end="url(#arrowBlue)"/>
+
+  <g filter="url(#shadow)">
+    <polygon points="945,610 1080,705 945,800 810,705" fill="#fff7e6" stroke="#dba23b" stroke-width="3"/>
+    <text x="945" y="694" text-anchor="middle" class="h">¿Coincide con el</text>
+    <text x="945" y="724" text-anchor="middle" class="h">hash almacenado?</text>
+  </g>
+
+  <path d="M1080 705 H1175" stroke="#19745e" stroke-width="5" fill="none" marker-end="url(#arrowGreen)"/>
+  <text x="1125" y="685" text-anchor="middle" class="label" fill="#11604e">SÍ</text>
+  <g filter="url(#shadow)">
+    <rect x="1200" y="625" width="250" height="160" rx="22" fill="#e9f8f1" stroke="#66b99a" stroke-width="2"/>
+    <text x="1325" y="676" text-anchor="middle" class="h">Integridad confirmada</text>
+    <text x="1325" y="711" text-anchor="middle" class="p">El archivo no cambió</text>
+    <text x="1325" y="742" text-anchor="middle" class="small">Resultado: matches = true</text>
+  </g>
+
+  <path d="M945 800 V850 H1490" stroke="#c55a5a" stroke-width="5" fill="none" marker-end="url(#arrowRed)"/>
+  <text x="974" y="842" class="label" fill="#a43b3b">NO</text>
+  <g filter="url(#shadow)">
+    <rect x="1510" y="790" width="180" height="120" rx="22" fill="#fff0f0" stroke="#e38a8a" stroke-width="2"/>
+    <text x="1600" y="835" text-anchor="middle" class="h">Advertencia</text>
+    <text x="1600" y="868" text-anchor="middle" class="p">Archivo modificado</text>
+    <text x="1600" y="893" text-anchor="middle" class="small">matches = false</text>
+  </g>
+
+  <path d="M1485 430 V478 H1120 V535" stroke="#71827b" stroke-width="3" stroke-dasharray="10 9" fill="none" marker-end="url(#arrowGray)"/>
+  <rect x="1210" y="461" width="330" height="42" rx="21" fill="#ffffff" stroke="#9fb0aa"/>
+  <text x="1375" y="488" text-anchor="middle" class="small">La base de datos conserva el hash esperado</text>
+
+  <text x="82" y="960" class="small">DonationChain · El hash comprueba integridad; no cifra el archivo ni demuestra que el documento original sea verdadero.</text>
+</svg>

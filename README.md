@@ -152,6 +152,22 @@ Revisa [los controles y límites de seguridad](docs/SEGURIDAD.md) antes de expon
 
 Este repositorio contiene un piloto funcional, no un sistema financiero certificado. El hash prueba integridad después del registro, pero no prueba por sí solo que una transferencia bancaria, una factura o la información proporcionada sean verdaderas. Para producción todavía se requiere conciliación bancaria, verificación legal/fiscal, PostgreSQL administrado, almacenamiento privado, MFA, monitoreo y auditoría externa del contrato.
 
+## Ejecución similar a producción
+
+El proyecto incluye ahora:
+
+- PostgreSQL mediante `psycopg`;
+- migraciones con Alembic;
+- almacenamiento local persistente o almacenamiento privado compatible con S3;
+- creación segura del primer administrador mediante consola;
+- contenedores para API, frontend y PostgreSQL;
+- proxy Nginx con soporte para rutas de React;
+- verificaciones de salud y preparación;
+- cabeceras de seguridad y validación de hosts;
+- pruebas automáticas en GitHub Actions.
+
+Consulta [la guía de producción](docs/PRODUCCION.md) para levantar la pila con `docker compose`, crear el administrador inicial y configurar respaldos.
+
 ## Proyecto académico
 
 Materia: Cadena de Bloques, Ingeniería en Informática.

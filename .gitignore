@@ -38,6 +38,7 @@ Thumbs.db
 
 # Información privada o local
 .env
+.env.production
 comprobantes/
 backend/storage/
 backend/*.db

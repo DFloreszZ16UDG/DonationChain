@@ -1,14 +1,15 @@
 import hashlib
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models import Receipt, Role, User
 from ..schemas import ReceiptOut, ReceiptVerification
 from ..security import require_roles
-from ..services.receipts import read_validated_upload, receipt_path
+from ..services.receipts import load_receipt, read_validated_upload
 
 router = APIRouter(prefix="/receipts", tags=["Comprobantes"])
 
@@ -49,7 +50,12 @@ def download_receipt(
     receipt = db.get(Receipt, receipt_id)
     if receipt is None:
         raise HTTPException(status_code=404, detail="Comprobante no encontrado")
-    path = receipt_path(receipt.stored_name)
-    if not path.exists():
+    data = load_receipt(receipt.stored_name)
+    if data is None:
         raise HTTPException(status_code=410, detail="El archivo ya no está disponible")
-    return FileResponse(path, media_type=receipt.mime_type, filename=receipt.original_name)
+    encoded_name = quote(receipt.original_name, safe="")
+    return Response(
+        content=data,
+        media_type=receipt.mime_type,
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{encoded_name}"},
+    )

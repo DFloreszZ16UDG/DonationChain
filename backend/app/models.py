@@ -5,7 +5,16 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from enum import Enum
 
-from sqlalchemy import DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
+from sqlalchemy import (
+    CheckConstraint,
+    DateTime,
+    ForeignKey,
+    Integer,
+    Numeric,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -76,6 +85,7 @@ class User(Base):
 
 class Campaign(Base):
     __tablename__ = "campaigns"
+    __table_args__ = (CheckConstraint("goal_amount > 0", name="ck_campaign_goal_positive"),)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4_string)
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), index=True)
@@ -94,6 +104,7 @@ class Campaign(Base):
 
 class Receipt(Base):
     __tablename__ = "receipts"
+    __table_args__ = (CheckConstraint("size_bytes > 0", name="ck_receipt_size_positive"),)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4_string)
     original_name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -107,6 +118,7 @@ class Receipt(Base):
 
 class Donation(Base):
     __tablename__ = "donations"
+    __table_args__ = (CheckConstraint("amount > 0", name="ck_donation_amount_positive"),)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4_string)
     campaign_id: Mapped[str] = mapped_column(ForeignKey("campaigns.id"), index=True)
@@ -123,6 +135,7 @@ class Donation(Base):
 
 class Expense(Base):
     __tablename__ = "expenses"
+    __table_args__ = (CheckConstraint("amount > 0", name="ck_expense_amount_positive"),)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4_string)
     campaign_id: Mapped[str] = mapped_column(ForeignKey("campaigns.id"), index=True)
@@ -147,7 +160,10 @@ class Expense(Base):
 
 class Allocation(Base):
     __tablename__ = "allocations"
-    __table_args__ = (UniqueConstraint("donation_id", "expense_id", name="uq_allocation_pair"),)
+    __table_args__ = (
+        UniqueConstraint("donation_id", "expense_id", name="uq_allocation_pair"),
+        CheckConstraint("amount > 0", name="ck_allocation_amount_positive"),
+    )
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4_string)
     donation_id: Mapped[str] = mapped_column(ForeignKey("donations.id"), index=True)

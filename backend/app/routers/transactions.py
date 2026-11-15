@@ -31,7 +31,7 @@ from ..schemas import (
 from ..security import get_current_user, require_roles
 from ..services.audit import record_audit
 from ..services.donation_acknowledgement import build_donation_acknowledgement
-from ..services.receipts import store_receipt
+from ..services.receipts import delete_receipt, store_receipt
 
 router = APIRouter(tags=["Donaciones y gastos"])
 
@@ -211,31 +211,39 @@ async def create_donation(
     _ensure_active(campaign)
     exact_amount = parse_money(amount)
     receipt = None
+    stored = None
     if receipt_file is not None:
         stored = await store_receipt(receipt_file)
-        receipt = _create_receipt_model(db, receipt_file, stored, user)
-    donation = Donation(
-        campaign_id=campaign.id,
-        donor_id=user.id,
-        donor_name=donor_name.strip(),
-        amount=exact_amount,
-        receipt_id=receipt.id if receipt else None,
-    )
-    db.add(donation)
-    db.flush()
-    record_audit(
-        db,
-        user,
-        "DONATION_RECORDED",
-        "DONATION",
-        donation.id,
-        {
-            "campaign_id": campaign.id,
-            "amount": exact_amount,
-            "receipt_hash": receipt.sha256 if receipt else None,
-        },
-    )
-    db.commit()
+    try:
+        if stored is not None:
+            receipt = _create_receipt_model(db, receipt_file, stored, user)
+        donation = Donation(
+            campaign_id=campaign.id,
+            donor_id=user.id,
+            donor_name=donor_name.strip(),
+            amount=exact_amount,
+            receipt_id=receipt.id if receipt else None,
+        )
+        db.add(donation)
+        db.flush()
+        record_audit(
+            db,
+            user,
+            "DONATION_RECORDED",
+            "DONATION",
+            donation.id,
+            {
+                "campaign_id": campaign.id,
+                "amount": exact_amount,
+                "receipt_hash": receipt.sha256 if receipt else None,
+            },
+        )
+        db.commit()
+    except Exception:
+        db.rollback()
+        if stored is not None:
+            delete_receipt(stored.stored_name)
+        raise
     db.refresh(donation)
     return donation
 
@@ -274,33 +282,38 @@ async def create_expense(
         raise HTTPException(status_code=403, detail="La campaña pertenece a otra organización")
     exact_amount = parse_money(amount)
     stored = await store_receipt(receipt_file)
-    receipt = _create_receipt_model(db, receipt_file, stored, user)
-    expense = Expense(
-        campaign_id=campaign.id,
-        organization_id=campaign.organization_id,
-        requested_by_id=user.id,
-        concept=concept.strip(),
-        description=description.strip(),
-        amount=exact_amount,
-        receipt_id=receipt.id,
-        status=ExpenseStatus.PENDING,
-    )
-    db.add(expense)
-    db.flush()
-    record_audit(
-        db,
-        user,
-        "EXPENSE_SUBMITTED",
-        "EXPENSE",
-        expense.id,
-        {
-            "campaign_id": campaign.id,
-            "amount": exact_amount,
-            "concept": expense.concept,
-            "receipt_hash": receipt.sha256,
-        },
-    )
-    db.commit()
+    try:
+        receipt = _create_receipt_model(db, receipt_file, stored, user)
+        expense = Expense(
+            campaign_id=campaign.id,
+            organization_id=campaign.organization_id,
+            requested_by_id=user.id,
+            concept=concept.strip(),
+            description=description.strip(),
+            amount=exact_amount,
+            receipt_id=receipt.id,
+            status=ExpenseStatus.PENDING,
+        )
+        db.add(expense)
+        db.flush()
+        record_audit(
+            db,
+            user,
+            "EXPENSE_SUBMITTED",
+            "EXPENSE",
+            expense.id,
+            {
+                "campaign_id": campaign.id,
+                "amount": exact_amount,
+                "concept": expense.concept,
+                "receipt_hash": receipt.sha256,
+            },
+        )
+        db.commit()
+    except Exception:
+        db.rollback()
+        delete_receipt(stored.stored_name)
+        raise
     db.refresh(expense)
     return expense
 

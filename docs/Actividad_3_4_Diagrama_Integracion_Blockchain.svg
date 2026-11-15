@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1100" viewBox="0 0 1800 1100">
+  <defs>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#073f35"/>
+      <stop offset="1" stop-color="#0b6b56"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#113b32" flood-opacity="0.13"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#14755f"/>
+    </marker>
+    <marker id="arrowGold" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#d89024"/>
+    </marker>
+    <style>
+      .title { font: 800 46px 'Segoe UI', Arial, sans-serif; fill: #ffffff; }
+      .subtitle { font: 400 23px 'Segoe UI', Arial, sans-serif; fill: #d7e9e3; }
+      .lane { font: 800 20px 'Segoe UI', Arial, sans-serif; letter-spacing: 2px; }
+      .node-title { font: 800 23px 'Segoe UI', Arial, sans-serif; fill: #102720; }
+      .node-copy { font: 400 17px 'Segoe UI', Arial, sans-serif; fill: #4d615b; }
+      .node-code { font: 700 16px Consolas, monospace; fill: #0b6b56; }
+      .step { font: 800 18px 'Segoe UI', Arial, sans-serif; fill: #073f35; }
+      .arrow-label { font: 700 15px 'Segoe UI', Arial, sans-serif; fill: #49635b; }
+      .small { font: 600 15px 'Segoe UI', Arial, sans-serif; fill: #5f746d; }
+    </style>
+  </defs>
+
+  <rect width="1800" height="1100" fill="#ffffff"/>
+  <rect width="1800" height="155" fill="url(#header)"/>
+  <circle cx="1690" cy="40" r="210" fill="#e7a536" opacity="0.12"/>
+  <rect x="64" y="40" width="72" height="72" rx="20" fill="#ffffff"/>
+  <text x="100" y="86" text-anchor="middle" font-family="Segoe UI, Arial" font-size="25" font-weight="900" fill="#0b6b56">DC</text>
+  <text class="title" x="160" y="76">Integración de DonationChain con Blockchain</text>
+  <text class="subtitle" x="160" y="113">Flujo de datos, comunicación y verificación en Ethereum Sepolia</text>
+
+  <rect x="40" y="180" width="1720" height="530" rx="28" fill="#f5f7f4" stroke="#d9e3de"/>
+  <text class="lane" x="72" y="218" fill="#58736a">SISTEMA INFORMÁTICO · FUERA DE BLOCKCHAIN</text>
+  <rect x="40" y="735" width="1720" height="315" rx="28" fill="#eaf4f0" stroke="#bdd8ce"/>
+  <text class="lane" x="72" y="775" fill="#0b6b56">INTEGRACIÓN Y RED BLOCKCHAIN</text>
+
+  <!-- Main application row -->
+  <g filter="url(#shadow)">
+    <rect x="70" y="270" width="250" height="155" rx="22" fill="#ffffff" stroke="#cddbd5" stroke-width="2"/>
+    <circle cx="112" cy="312" r="24" fill="#e7a536"/>
+    <text x="112" y="319" text-anchor="middle" class="step">1</text>
+    <text class="node-title" x="150" y="316">Usuarios</text>
+    <text class="node-copy" x="95" y="356">Donante · Organización</text>
+    <text class="node-copy" x="95" y="382">Auditor · Administrador</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="390" y="270" width="250" height="155" rx="22" fill="#ffffff" stroke="#cddbd5" stroke-width="2"/>
+    <circle cx="432" cy="312" r="24" fill="#e7a536"/>
+    <text x="432" y="319" text-anchor="middle" class="step">2</text>
+    <text class="node-title" x="470" y="316">Frontend React</text>
+    <text class="node-copy" x="415" y="356">Formularios y consultas</text>
+    <text class="node-copy" x="415" y="382">Interfaz según el rol</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="710" y="270" width="265" height="155" rx="22" fill="#ffffff" stroke="#86b4a5" stroke-width="3"/>
+    <circle cx="752" cy="312" r="24" fill="#e7a536"/>
+    <text x="752" y="319" text-anchor="middle" class="step">3</text>
+    <text class="node-title" x="790" y="316">API FastAPI</text>
+    <text class="node-copy" x="735" y="356">Autenticación y roles</text>
+    <text class="node-copy" x="735" y="382">Reglas y validación</text>
+  </g>
+
+  <path d="M320 348 H378" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <text class="arrow-label" x="349" y="333" text-anchor="middle">HTTPS</text>
+  <path d="M640 348 H698" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <text class="arrow-label" x="669" y="333" text-anchor="middle">REST / JSON</text>
+
+  <!-- Off-chain storage and hash -->
+  <g filter="url(#shadow)">
+    <rect x="1060" y="240" width="300" height="145" rx="22" fill="#ffffff" stroke="#cddbd5" stroke-width="2"/>
+    <text class="node-title" x="1088" y="282">Base de datos relacional</text>
+    <text class="node-copy" x="1088" y="316">Campañas, donaciones, gastos,</text>
+    <text class="node-copy" x="1088" y="342">fechas, cantidades y asignaciones</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1060" y="420" width="300" height="145" rx="22" fill="#ffffff" stroke="#cddbd5" stroke-width="2"/>
+    <text class="node-title" x="1088" y="462">Almacenamiento de archivos</text>
+    <text class="node-copy" x="1088" y="496">Comprobantes PDF, JPG o PNG</text>
+    <text class="node-copy" x="1088" y="522">Los archivos no van a Blockchain</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1440" y="330" width="285" height="175" rx="22" fill="#fff8ea" stroke="#e7a536" stroke-width="3"/>
+    <circle cx="1482" cy="372" r="24" fill="#e7a536"/>
+    <text x="1482" y="379" text-anchor="middle" class="step">4</text>
+    <text class="node-title" x="1520" y="376">Hash y auditoría</text>
+    <text class="node-code" x="1468" y="417">SHA-256</text>
+    <text class="node-copy" x="1468" y="450">receipt_hash + audit_hash</text>
+    <text class="node-copy" x="1468" y="477">Detecta modificaciones</text>
+  </g>
+
+  <path d="M975 320 H1048" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <path d="M975 375 C1015 375, 1015 492, 1048 492" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <text class="arrow-label" x="1003" y="300">SQL</text>
+  <text class="arrow-label" x="1008" y="471">Archivo</text>
+  <path d="M1360 310 C1405 310, 1405 375, 1428 375" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1360 492 H1428" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <path d="M975 405 C1100 650, 1410 630, 1515 517" stroke="#14755f" stroke-width="3" stroke-dasharray="10 9" fill="none" marker-end="url(#arrow)"/>
+  <text class="arrow-label" x="1252" y="631">Datos normalizados del registro</text>
+
+  <!-- Blockchain row -->
+  <g filter="url(#shadow)">
+    <rect x="100" y="825" width="300" height="165" rx="22" fill="#ffffff" stroke="#e7a536" stroke-width="3"/>
+    <circle cx="142" cy="868" r="24" fill="#e7a536"/>
+    <text x="142" y="875" text-anchor="middle" class="step">5</text>
+    <text class="node-title" x="180" y="872">Web3.py + ABI</text>
+    <text class="node-copy" x="128" y="911">Codifica la llamada al contrato</text>
+    <text class="node-copy" x="128" y="938">y firma la transacción</text>
+    <text class="node-code" x="128" y="968">EIP-1559</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="480" y="825" width="280" height="165" rx="22" fill="#ffffff" stroke="#86b4a5" stroke-width="3"/>
+    <circle cx="522" cy="868" r="24" fill="#e7a536"/>
+    <text x="522" y="875" text-anchor="middle" class="step">6</text>
+    <text class="node-title" x="560" y="872">Nodo Ethereum</text>
+    <text class="node-copy" x="508" y="911">Interfaz JSON-RPC</text>
+    <text class="node-code" x="508" y="940">eth_sendRawTransaction</text>
+    <text class="node-code" x="508" y="968">eth_call</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="840" y="825" width="320" height="165" rx="22" fill="#ffffff" stroke="#0b6b56" stroke-width="3"/>
+    <circle cx="882" cy="868" r="24" fill="#e7a536"/>
+    <text x="882" y="875" text-anchor="middle" class="step">7</text>
+    <text class="node-title" x="920" y="872">Smart Contract</text>
+    <text class="node-code" x="868" y="914">anchorRecord()</text>
+    <text class="node-code" x="868" y="943">verifyRecord()</text>
+    <text class="node-copy" x="868" y="972">Guarda y compara hashes</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1240" y="825" width="300" height="165" rx="22" fill="#073f35" stroke="#073f35" stroke-width="3"/>
+    <circle cx="1282" cy="868" r="24" fill="#e7a536"/>
+    <text x="1282" y="875" text-anchor="middle" class="step">8</text>
+    <text x="1320" y="872" font-family="Segoe UI, Arial" font-size="23" font-weight="800" fill="#ffffff">Ethereum Sepolia</text>
+    <text x="1268" y="912" font-family="Segoe UI, Arial" font-size="17" fill="#d7e9e3">Validadores Proof of Stake</text>
+    <text x="1268" y="940" font-family="Segoe UI, Arial" font-size="17" fill="#d7e9e3">incluyen la transacción</text>
+    <text x="1268" y="968" font-family="Segoe UI, Arial" font-size="17" fill="#d7e9e3">en un bloque</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1590" y="825" width="140" height="165" rx="22" fill="#ffffff" stroke="#e7a536" stroke-width="3"/>
+    <text class="node-title" x="1660" y="872" text-anchor="middle">Explorador</text>
+    <text class="node-copy" x="1660" y="912" text-anchor="middle">Tx hash</text>
+    <text class="node-copy" x="1660" y="940" text-anchor="middle">Bloque</text>
+    <text class="node-copy" x="1660" y="968" text-anchor="middle">Estado</text>
+  </g>
+
+  <path d="M1518 505 C1518 700, 250 700, 250 813" stroke="#d89024" stroke-width="5" fill="none" marker-end="url(#arrowGold)"/>
+  <text class="arrow-label" x="650" y="695">Solo el hash viaja a Blockchain</text>
+  <path d="M400 908 H468" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <text class="arrow-label" x="434" y="892" text-anchor="middle">JSON-RPC</text>
+  <path d="M760 908 H828" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <text class="arrow-label" x="794" y="892" text-anchor="middle">ABI</text>
+  <path d="M1160 908 H1228" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <text class="arrow-label" x="1194" y="892" text-anchor="middle">Transacción</text>
+  <path d="M1540 908 H1578" stroke="#14755f" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Return/confirmation path -->
+  <path d="M1390 1002 C1390 1068, 842 1068, 842 438" stroke="#d89024" stroke-width="4" stroke-dasharray="12 10" fill="none" marker-end="url(#arrowGold)"/>
+  <rect x="840" y="1015" width="510" height="42" rx="18" fill="#fff8ea" stroke="#e7a536"/>
+  <text x="1095" y="1042" text-anchor="middle" class="arrow-label">Confirmación: hash de transacción + número de bloque + estado</text>
+
+  <text class="small" x="70" y="1082">Los datos personales y los comprobantes completos permanecen fuera de la cadena; Blockchain conserva evidencia de integridad.</text>
+</svg>

@@ -5,7 +5,7 @@ import json
 from datetime import UTC, datetime
 from decimal import Decimal
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from ..config import get_settings
@@ -34,8 +34,15 @@ def record_audit(
     entity_id: str,
     details: dict,
 ) -> AuditLog:
+    # Serialize writers in PostgreSQL so two simultaneous requests cannot create
+    # different entries that point to the same previous hash.
+    if db.bind is not None and db.bind.dialect.name == "postgresql":
+        db.execute(text("SELECT pg_advisory_xact_lock(4479662849127711)"))
     previous = db.scalar(
-        select(AuditLog).order_by(AuditLog.created_at.desc(), AuditLog.id.desc()).limit(1)
+        select(AuditLog)
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        .limit(1)
+        .with_for_update()
     )
     previous_hash = previous.entry_hash if previous else "0" * 64
     created_at = datetime.now(UTC)
